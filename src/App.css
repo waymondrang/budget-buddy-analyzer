@@ -24,6 +24,16 @@ body {
   overflow: auto;
   width: fit-content;
   border: 2px solid #404040;
+  flex: 1;
+  margin-bottom: 12px;
+}
+
+.totals_table {
+  position: relative;
+  border-radius: 12px;
+  overflow: auto;
+  width: 100%;
+  border: 2px solid #404040;
 }
 
 thead {
@@ -33,13 +43,25 @@ thead {
   background-color: #262626;
 }
 
-.table_header th {
+thead th {
   border-bottom: 2px solid #404040;
+}
+
+tfoot {
+  position: sticky;
+  bottom: 0px;
+  left: 0;
+  background-color: #262626;
+}
+
+tfoot td {
+  border-top: 2px solid #404040;
 }
 
 table {
   border-spacing: 0px;
   background-color: #262626;
+  width: 100%;
 }
 
 th {
