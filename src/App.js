@@ -195,10 +195,23 @@ export default class App extends React.Component {
 
   onLocationFilterChange(e) {
     var filter = this.state.filter;
-    filter["location"] = e.target.value;
-    this.setState({
-      filter: filter
-    })
+    var location = e.target.value;
+    filter["location"] = location;
+    if (location === "bb_all_locations") {
+      this.setState({
+        filtered_data: this.state.data,
+        filter: filter
+      })
+    } else {
+      var data = this.state.data.filter(e => e["location"] === location);
+      this.setState({
+        filtered_data: data,
+        filter: filter
+      })
+    }
+    // this.setState({
+    //   filter: filter
+    // })
   }
 
   applyFilter(e) {
@@ -286,7 +299,7 @@ export default class App extends React.Component {
           </div>
           <div className="totals_table">
             <table>
-              <thead>
+              <thead className="totals_table_head">
                 <tr>
                   <th>Total</th>
                   <th>Dining Dollars</th>
@@ -309,61 +322,57 @@ export default class App extends React.Component {
         </section>
         <hr />
         <section>
-          <table className="balance">
-            <thead className="balance_header">
-              <th colSpan="2">Dining Dollars</th>
-            </thead>
-            <tbody className="balance_body">
-              <tr>
-                <td>
-                  Balance
-                </td>
-                <td>
-                  Spent
-                </td>
-              </tr>
-              <tr id="dining_dollars">
-                <td>${this.state.dining_dollars}</td>
-                <td>${this.spentDateDining(new Date(2021, 9 - 1), new Date())}</td>
-              </tr>
-              <tr>
-                <td>
-                  Days Left
-                </td>
-                <td>
-                  Days Past
-                </td>
-              </tr>
-              <tr id="dining_dollars">
-                <td>{this.daysLeft()}</td>
-                <td>{this.daysPast()}</td>
-              </tr>
-              <tr>
-                <td>
-                  Allowance/Day
-                </td>
-                <td>
-                  Spent/Day
-                </td>
-              </tr>
-              <tr id="dining_dollars">
-                <td>${+(this.state.dining_dollars / this.daysLeft()).toFixed(2)}</td>
-                <td>${+(this.spentDateDining(new Date(2021, 9 - 1), new Date()) / this.daysPast()).toFixed(2)}</td>
-              </tr>
-              <tr>
-                <td>
-                  Spent Today
-                </td>
-                <td>
-                  Spent Yesterday
-                </td>
-              </tr>
-              <tr id="dining_dollars">
-                <td>${this.spentDateDining(new Date(), new Date())}</td>
-                <td>${this.spentDateDining(new Date() - (1000 * 60 * 60 * 24), new Date() - (1000 * 60 * 60 * 24))}</td>
-              </tr>
-            </tbody>
-          </table>
+          <h1>Dining Dollars</h1>
+          <div className="info_card_container">
+            <div className="info_card">
+              <div className="info_card_content">
+                <p className="info_title">Current Balance</p>
+                <span className="info_body">${this.state.dining_dollars}</span>
+              </div>
+            </div>
+            <div className="info_card">
+              <div className="info_card_content">
+                <p className="info_title">Spent</p>
+                <span className="info_body">${this.spentDateDining(new Date(2021, 9 - 1), new Date())}</span>
+              </div>
+            </div>
+            <div className="info_card">
+              <div className="info_card_content">
+                <p className="info_title">Allowance/Day</p>
+                <span className="info_body">${+(this.state.dining_dollars / this.daysLeft()).toFixed(2)}</span>
+              </div>
+            </div>
+            <div className="info_card">
+              <div className="info_card_content">
+                <p className="info_title">Spent Today</p>
+                <span className="info_body">${this.spentDateDining(new Date(), new Date())}</span>
+              </div>
+            </div>
+            <div className="info_card">
+              <div className="info_card_content">
+                <p className="info_title">Spent Yesterday</p>
+                <span className="info_body">${this.spentDateDining(new Date() - (1000 * 60 * 60 * 24), new Date() - (1000 * 60 * 60 * 24))}</span>
+              </div>
+            </div>
+            <div className="info_card">
+              <div className="info_card_content">
+                <p className="info_title">Spent/Day</p>
+                <span className="info_body">${+(this.spentDateDining(new Date(2021, 9 - 1), new Date()) / this.daysPast()).toFixed(2)}</span>
+              </div>
+            </div>
+            <div className="info_card">
+              <div className="info_card_content">
+                <p className="info_title">Days Left</p>
+                <span className="info_body">{this.daysLeft()}</span>
+              </div>
+            </div>
+            <div className="info_card">
+              <div className="info_card_content">
+                <p className="info_title">Days Past</p>
+                <span className="info_body">{this.daysPast()}</span>
+              </div>
+            </div>
+          </div>
         </section>
       </div>
     )
