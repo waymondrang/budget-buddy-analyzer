@@ -4,14 +4,21 @@ body {
   font-size: 1em;
 }
 
-#main {
-  width: fit-content;
-  margin: 0 auto;
+section {
+  width: 100%;
+  max-width: 1000px;
+  height: 100vh;
   display: flex;
   flex-direction: column;
-  height: 100vh;
   padding: 24px 0;
   box-sizing: border-box;
+  margin: 0 auto;
+}
+
+hr {
+  border: none;
+  border-bottom: 2px solid #404040;
+  margin: 12px 0;
 }
 
 #title {
@@ -22,7 +29,6 @@ body {
   position: relative;
   border-radius: 12px;
   overflow: auto;
-  width: fit-content;
   border: 2px solid #404040;
   flex: 1;
   margin-bottom: 12px;
@@ -36,14 +42,15 @@ body {
   border: 2px solid #404040;
 }
 
-thead {
+.table_container thead {
   position: sticky;
   top: 0;
   left: 0;
   background-color: #262626;
+  width: 100%;
 }
 
-thead th {
+.table_header th {
   border-bottom: 2px solid #404040;
 }
 
@@ -64,7 +71,7 @@ table {
   width: 100%;
 }
 
-th {
+.table_header th {
   cursor: pointer;
   user-select: none;
 }
@@ -144,16 +151,35 @@ button {
   width: fit-content;
 }
 
-#footer {
+.footer {
   display: flex;
   flex-direction: row;
 }
 
-#footer > :first-child {
+.footer > :first-child {
   flex: 1;
+  text-align: start;
 }
 
-#footer > :last-child {
+.footer > :last-child {
   flex: 1;
   text-align: end;
+}
+
+.balance {
+  width: 100%;
+  background-color: #262626;
+  border: 2px solid #404040;
+  box-sizing: border-box;
+  border-radius: 12px;
+  margin-bottom: 12px;
+}
+
+.balance_header th {
+  border-bottom: 2px solid #404040;
+}
+
+#dining_dollars {
+  font-size: 48px;
+  font-weight: bold;
 }
