@@ -15,6 +15,8 @@ export default class App extends React.Component {
       },
       last_update: "",
       version: "",
+      outdated_version: -1,
+      newest_version: "",
       debug: new URLSearchParams(window.location.search).has("debug"),
       data: [],
       filtered_data: [],
@@ -72,13 +74,20 @@ export default class App extends React.Component {
       return
     }
     try {
-      window.chrome.storage.local.get(['data', 'last_update'], function (result) {
+      window.chrome.storage.local.get(['data', 'last_update'], async function (result) {
         var data = result["data"];
         var last_update = result["last_update"]
         var version = window.chrome.runtime.getManifest().version;
         if (!data) {
           console.log("no data found!");
           return;
+        }
+        var newest_version;
+        try {
+          var newest_mainfest = await fetch("https://raw.githubusercontent.com/waymondrang/budget-buddy/main/manifest.json").then(result => result.json())
+          newest_version = newest_mainfest["version"];
+        } catch (e) {
+          console.log(e)
         }
         var locations = [];
         for (var transaction of data) {
@@ -89,6 +98,8 @@ export default class App extends React.Component {
         self.setState({
           data: data,
           version: version,
+          newest_version: newest_version,
+          outdated_version: newest_version ? +((version).replace(/[^0-9]/gm, "")) < +((newest_version).replace(/[^0-9]/gm, "")) ? 1 : +((version).replace(/[^0-9]/gm, "")) === +((newest_version).replace(/[^0-9]/gm, "")) ? 2 : 3 : -1,
           filtered_data: data,
           last_update: last_update,
           locations: locations.sort(function (a, b) { return a.localeCompare(b) }),
@@ -261,7 +272,7 @@ export default class App extends React.Component {
       <div id="main">
         <section>
           <h1 id="title">Budget Buddy Analyzer{this.state.debug ? "\ Debug Mode" : ""}</h1>
-          <p>Shift + Click on a header field to set it as the primary sort parameter.</p>
+          <p>Shift + Click on a header field to set it as the primary sort parameter. {this.state.outdated_version === 1 ? "An update is available!" : this.state.outdated_version === 2 ? "You are running the latest version!" : this.state.outdated_version === 3 ? "You are running a preview build!" : "Unable to check for updates."}</p>
           <div className="options">
             <select className="option" value={this.state.filter["location"]} onChange={this.onLocationFilterChange}>
               <option key="bb_default" value="" disabled>Select Location</option>
