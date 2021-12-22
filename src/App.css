@@ -125,7 +125,7 @@ tr:nth-child(even) {
   flex-direction: row;
 }
 
-.options > :not(:first-child) {
+.options> :not(:first-child) {
   margin-left: 12px;
 }
 
@@ -160,14 +160,26 @@ button {
   flex-direction: row;
 }
 
-.footer > :first-child {
+.footer> :first-child {
   flex: 1;
   text-align: start;
 }
 
-.footer > :last-child {
+.footer> :last-child {
   flex: 1;
   text-align: end;
+}
+
+.footer_container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.update_button {
+  margin-left: 12px;
+  text-decoration: none;
+  color: inherit;
 }
 
 .balance {

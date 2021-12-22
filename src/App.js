@@ -304,19 +304,24 @@ export default class App extends React.Component {
                   <th>Total</th>
                   <th>Dining Dollars</th>
                   <th>Triton Cash</th>
+                  <th>Triton2Go Dining Dollars</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <td></td>
-                  <td>${data.filter(e => e["type"].toLowerCase() === "credit" && e["account"].toLowerCase() === "dining dollars").reduce((a, b) => a + b["amount"], 0) - data.filter(e => e["type"].toLowerCase() === "debit" && e["account"].toLowerCase() === "dining dollars").reduce((a, b) => +(a + b["amount"]).toFixed(2), 0)}</td>
-                  <td>${data.filter(e => e["type"].toLowerCase() === "credit" && e["account"].toLowerCase() === "triton cash").reduce((a, b) => a + b["amount"], 0) - data.filter(e => e["type"].toLowerCase() === "debit" && e["account"].toLowerCase() === "triton cash").reduce((a, b) => +(a + b["amount"]).toFixed(2), 0)}</td>
+                  <td>${data.filter(e => e["type"].toLowerCase() === "credit" && e["account"] === "Dining Dollars").reduce((a, b) => a + b["amount"], 0) - data.filter(e => e["type"].toLowerCase() === "debit" && e["account"] === "Dining Dollars").reduce((a, b) => +(a + b["amount"]).toFixed(2), 0)}</td>
+                  <td>${data.filter(e => e["type"].toLowerCase() === "credit" && e["account"] === "Triton Cash").reduce((a, b) => a + b["amount"], 0) - data.filter(e => e["type"].toLowerCase() === "debit" && e["account"] === "Triton Cash").reduce((a, b) => +(a + b["amount"]).toFixed(2), 0)}</td>
+                  <td>${data.filter(e => e["type"].toLowerCase() === "credit" && e["account"] === "Triton2Go Dining Dollars").reduce((a, b) => a + b["amount"], 0) - data.filter(e => e["type"].toLowerCase() === "debit" && e["account"] === "Triton2Go Dining Dollars").reduce((a, b) => +(a + b["amount"]).toFixed(2), 0)}</td>
                 </tr>
               </tbody>
             </table>
           </div>
           <div className="footer">
-            <p>Last Update: {this.state.last_update}</p>
+            <div className='footer_container'>
+              <p>Last Update: {this.state.last_update}</p>
+              <a className='update_button' href="https://eacct-ucsd-sp.transactcampus.com/eAccounts/AccountTransaction.aspx"><button>Update</button></a>
+            </div>
             <p>{this.state.filtered_data.length} {this.state.filtered_data.length !== 1 ? "Transactions" : "Transaction"}</p>
           </div>
         </section>
