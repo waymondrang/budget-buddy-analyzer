@@ -51,11 +51,11 @@ export default class App extends React.Component {
     this.spentDateDining = this.spentDateDining.bind(this);
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const self = this;
     if (this.state.debug) {
       var locations = [];
-      var version = "Debug";
+      var version = "99.99.99";
       var data = [{ "account": "Dining Dollars", "amount": 12.59, "date": "2021-11-29T18:35:00.000Z", "id": "213a772c-56ac-4125-9e33-f17261b018f2", "location": "HDH Seventh Market Seventh Market 3", "time": "10:35 AM", "type": "Debit" }, { "account": "Triton Cash", "amount": 1, "date": "2021-11-27T16:50:00.000Z", "id": "49bbd629-3e8c-44db-b8fb-1cc005a1ee00", "location": "Laundry Village Building 3 Left", "time": "8:50 AM", "type": "Debit" }, { "account": "Triton Cash", "amount": 1, "date": "2021-11-27T16:50:00.000Z", "id": "4cb1eaf7-3f05-4f07-8023-d77029f25743", "location": "Laundry Village Building 3 Left", "time": "8:50 AM", "type": "Debit" }];
       var last_update = "Debug Season";
       for (var transaction of data) {
@@ -63,9 +63,18 @@ export default class App extends React.Component {
           locations.push(transaction["location"]);
         }
       }
+      var newest_version;
+      try {
+        var newest_mainfest = await fetch("https://raw.githubusercontent.com/waymondrang/budget-buddy/main/manifest.json").then(result => result.json())
+        newest_version = newest_mainfest["version"];
+      } catch (e) {
+        console.log(e)
+      }
       self.setState({
         data: data,
         version: version,
+        newest_version: newest_version,
+        outdated_version: (newest_version && version) ? (+((version).replace(/[^0-9]/gm, "")) < +((newest_version).replace(/[^0-9]/gm, "")) ? 1 : +((version).replace(/[^0-9]/gm, "")) === +((newest_version).replace(/[^0-9]/gm, "")) ? 2 : 3) : 0,
         filtered_data: data,
         last_update: last_update,
         locations: locations.sort(function (a, b) { return a.localeCompare(b) }),
@@ -99,7 +108,7 @@ export default class App extends React.Component {
           data: data,
           version: version,
           newest_version: newest_version,
-          outdated_version: newest_version ? +((version).replace(/[^0-9]/gm, "")) < +((newest_version).replace(/[^0-9]/gm, "")) ? 1 : +((version).replace(/[^0-9]/gm, "")) === +((newest_version).replace(/[^0-9]/gm, "")) ? 2 : 3 : -1,
+          outdated_version: (newest_version && version) ? (+((version).replace(/[^0-9]/gm, "")) < +((newest_version).replace(/[^0-9]/gm, "")) ? 1 : +((version).replace(/[^0-9]/gm, "")) === +((newest_version).replace(/[^0-9]/gm, "")) ? 2 : 3) : 0,
           filtered_data: data,
           last_update: last_update,
           locations: locations.sort(function (a, b) { return a.localeCompare(b) }),
@@ -271,8 +280,8 @@ export default class App extends React.Component {
     return (
       <div id="main">
         <section>
-          <h1 id="title">Budget Buddy Analyzer{this.state.debug ? "\ Debug Mode" : ""}</h1>
-          <p>Shift + Click on a header field to set it as the primary sort parameter. {this.state.outdated_version === 1 ? "An update is available!" : this.state.outdated_version === 2 ? "You are running the latest version!" : this.state.outdated_version === 3 ? "You are running a preview build!" : "Unable to check for updates."}</p>
+          <h1 id="title">Budget Buddy Analyzer{this.state.debug ? " Debug Mode" : null} v{this.state.version}</h1>
+          <p>Shift + Click on a header field to set it as the primary sort parameter. {this.state.outdated_version === -1 ? "Checking for latest version." : this.state.outdated_version === 1 ? `A newer version (v${this.state.newest_version}) is available!` : this.state.outdated_version === 2 ? "You are running the latest version!" : this.state.outdated_version === 3 ? "You are running a preview build!" : "Unable to check for updates."}</p>
           <div className="options">
             <select className="option" value={this.state.filter["location"]} onChange={this.onLocationFilterChange}>
               <option key="bb_default" value="" disabled>Select Location</option>
@@ -331,7 +340,7 @@ export default class App extends React.Component {
           <div className="footer">
             <div className='footer_container'>
               <p>Last Update: {this.state.last_update}</p>
-              <a className='update_button' href="https://eacct-ucsd-sp.transactcampus.com/eAccounts/AccountTransaction.aspx"><button>Update</button></a>
+              <a className='update_button' href="https://eacct-ucsd-sp.transactcampus.com/eAccounts/AccountTransaction.aspx"><button>Update Data</button></a>
             </div>
             <p>{this.state.filtered_data.length} {this.state.filtered_data.length !== 1 ? "Transactions" : "Transaction"}</p>
           </div>
